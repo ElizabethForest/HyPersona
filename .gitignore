@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Ignore generated files (.csv and graphs)
+*.csv
+*_personas.txt
+graphs
+
+# ignore intellij settings and generated files
+.idea
+*.iml
+
+.DS_Store
