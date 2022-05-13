@@ -250,9 +250,47 @@ def _reset_files(output_location):
     _write_string(output_location, METRICS_LOCATION, 'Run ID, Parameters, SC, CHI, DBI, AFS, Dropped\n')
 
 
+# TODO: finish doc-string and add docstrings to other places
 # expects data as a pandas data frame
 def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=None, thresholds=None, acronyms=None,
                    output_location="", graph_output_location=None, always_in_personas=None, reset_files=True):
+    """
+    Runs the HyPersona framework. See [docs] or [paper] for more details. TODO
+
+    Parameters
+    ----------
+    data : Pandas DataFrame
+        The data to be clustered.
+
+    algorithm_map : dict
+        The algorithms and parameters to be compared. See [xxx] for more details. TODO: write up explanation
+
+    key_features : list, default=None
+        The list of "key features" to be included in the graphs.
+        When set to None, all features, including any aggregate features, are considered "key features".
+
+    aggregate_features : dict, default=None
+
+    thresholds : dict, default=None
+
+    acronyms : dict, default=None
+
+    output_location : String, default=""
+        The location for all output (.csv files, personas, and graphs) to be saved to
+
+    graph_output_location : String, default=""
+        The location for the graphs to be saved to. Will override the output_location just for the graph output.
+
+    always_in_personas : list, default=None
+
+    reset_files : bool, default=True
+        Whether the files that are appended to (metrics.csv, dropped.csv, and error.csv) should be reset, or whether
+        additional information should just be appended to the existing files.
+
+    Returns
+    ----------
+    Nothing. See [xxx] for details on output. TODO
+    """
     # default graph output location to output location
     if not graph_output_location:
         graph_output_location = output_location
@@ -335,6 +373,7 @@ def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=No
                     centroids = data_clustered.groupby('labels').mean()
                     pop_means = data_clustered.mean()
 
+                    # get the distance each feature of each centroid is from the population mean in standard deviations
                     for column in columns:
                         col_mean = pop_means[column]
                         col_std = data_clustered[column].std()
@@ -358,6 +397,7 @@ def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=No
                                                 diffs_in_std, pop_means)
                     _write_string(output_location, '_personas.txt', personas, run_id)
 
+            # catch any/all exceptions to allow the framework to keep running
             except Exception as e:
                 error_type = e.__class__.__name__
                 print(f"An error occurred running {run_id}: \n{error_type}: {e}")

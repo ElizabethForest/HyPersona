@@ -3,6 +3,7 @@ from itertools import combinations
 from scipy.stats import ttest_ind, ttest_1samp
 
 
+# TODO: docstring
 def average_feature_significance(data, labels, return_significance_map=False):
     unique_labels, counts = np.unique(labels, return_counts=True)
 
