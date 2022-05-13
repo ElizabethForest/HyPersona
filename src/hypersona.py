@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
+
 from .afs import average_feature_significance
 from .ensemble.nmf_consensus import nmf_consensus
 from .ensemble.simple_consensus import simple_voting_consensus
@@ -102,39 +103,44 @@ def _run_ensemble_algorithm(algorithms, params, data):
 
 def _calculate_metrics_and_thresholds(data, labels, thresholds):
     threshold_keys = thresholds.keys()
-    threshold_errors = []
+    errors = []
     metrics = {}
 
     unique_labels, counts = np.unique(labels, return_counts=True)
     k = len(unique_labels)
     if ("min_clusters" in threshold_keys) and k < thresholds["min_clusters"]:
-        threshold_errors.append(f"Created too few clusters: {k} - sizes {counts}")
+        errors.append(f"Created too few clusters: {k} - sizes {counts}")
 
     elif ("max_clusters" in threshold_keys) and k > thresholds["max_clusters"]:
-        threshold_errors.append(f"Created too many clusters: {k} - sizes {counts}")
+        errors.append(f"Created too many clusters: {k} - sizes {counts}")
 
-    if not threshold_errors:
+    # if there are too few clusters metrics cannot be calculated
+    if not errors:
+
+        min_cluster_size = thresholds["min_cluster_size"]
+        if any(size < min_cluster_size for size in counts):
+            errors.append(f"Created clusters that are too small (below {min_cluster_size}): {counts}")
 
         metrics['SC'] = silhouette_score(data, labels, metric="euclidean")
         if ("SC" in threshold_keys) and metrics['SC'] < thresholds['SC']:
-            threshold_errors.append(f"SC value - {metrics['SC']} - does not meet internal threshold of {thresholds['SC']}")
+            errors.append(f"SC value - {metrics['SC']} - does not meet internal threshold of {thresholds['SC']}")
 
         metrics['CHI'] = calinski_harabasz_score(data, labels)
         if ("CHI" in threshold_keys) and metrics['CHI'] < thresholds['CHI']:
-            threshold_errors.append(f"CHI value - {metrics['CHI']} - does not meet internal threshold of {thresholds['CHI']}")
+            errors.append(f"CHI value - {metrics['CHI']} - does not meet internal threshold of {thresholds['CHI']}")
 
         metrics['DBI'] = davies_bouldin_score(data, labels)
         if ("DBI" in threshold_keys) and metrics['DBI'] > thresholds['DBI']:
-            threshold_errors.append(f"DBI value - {metrics['DBI']} - does not meet internal threshold of {thresholds['DBI']}")
+            errors.append(f"DBI value - {metrics['DBI']} - does not meet internal threshold of {thresholds['DBI']}")
 
         metrics['AFS'], significance_map = average_feature_significance(data, labels, True)
         if ("AFS" in threshold_keys) and metrics['AFS'] < thresholds['AFS']:
-            threshold_errors.append(f"AFS value - {metrics['AFS']} - does not meet internal threshold of {thresholds['AFS']}")
+            errors.append(f"AFS value - {metrics['AFS']} - does not meet internal threshold of {thresholds['AFS']}")
 
-        return threshold_errors, metrics, significance_map
+        return errors, metrics, significance_map
 
     else:
-        return threshold_errors, metrics, None
+        return errors, metrics, None
 
 
 def _create_graph(key_diff_in_std, run_id, graph_output_location):
@@ -247,20 +253,18 @@ def _reset_files(output_location):
 # expects data as a pandas data frame
 def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=None, thresholds=None, acronyms=None,
                    output_location="", graph_output_location=None, always_in_personas=None, reset_files=True):
-
     # default graph output location to output location
     if not graph_output_location:
         graph_output_location = output_location
 
-    # if no key features set, use all
+    # if no key features set, use all - includes agg features
     if not key_features:
-        key_features = data.columns.tolist()
+        key_features = data.columns.tolist() + list(aggregate_features.keys())
 
     # use default thresholds if not set
     if not thresholds:
         row_count, feature_count = data.shape
         thresholds = {"min_clusters": 2,
-                      "max_clusters": 10,
                       "min_cluster_size": (row_count * 0.05),
                       "AFS": (feature_count * 0.3),
                       "SC": 0,
@@ -355,8 +359,6 @@ def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=No
                     _write_string(output_location, '_personas.txt', personas, run_id)
 
             except Exception as e:
-                print(f"An error occurred running {run_id}: \n{e.__class__.__name__}: {e}")
-                _append_string(output_location, ERRORS_LOCATION, f"""{run_id},"{param_map}",{e.__class__.__name__}:{e}\n""")
-
-
-
+                error_type = e.__class__.__name__
+                print(f"An error occurred running {run_id}: \n{error_type}: {e}")
+                _append_string(output_location, ERRORS_LOCATION, f"""{run_id},"{param_map}",{error_type}:{e}\n""")

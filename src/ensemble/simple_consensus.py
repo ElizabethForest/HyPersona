@@ -1,4 +1,3 @@
-
 # TODO: proper references in the proper spot
 # References:
 # https://www.sciencedirect.com/science/article/pii/S1574013717300692

@@ -1,6 +1,6 @@
+import numpy as np
 from itertools import combinations
 from scipy.stats import ttest_ind, ttest_1samp
-import numpy as np
 
 
 def average_feature_significance(data, labels, return_significance_map=False):
