@@ -10,11 +10,7 @@ HyPersona then develops a series of graphs and CSV files to facilitate the selec
 
 ## Installation 
 
-HyPersona can be installed via PIP:
-
-```bash
-pip install hypersona
-```
+HyPersona is currently not available for installation as a library, however the source code can be downloaded and used. 
 
 _TODO: set up with pip_
 
