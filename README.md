@@ -1,6 +1,7 @@
 # HyPersona
 
 A semi-automated framework for persona development and the hyperparameter tuning of clustering algorithms.
+This code accompanies the publication: [Selecting a clustering algorithm: A semi-automated hyperparameter tuning framework for effective persona development](https://doi.org/10.1016/j.array.2022.100186)
 
 ## Motivation
 
