@@ -14,15 +14,28 @@ from scipy.optimize import linear_sum_assignment
 # todo deal with noise/neg values in classes need to deal with them when relabelling and when determining final
 def simple_voting_consensus(label_matrix):
     """
-    Uses Simple Voting to find the consensus from the results of multiple clustering algorithms
+    Uses Simple Voting to the consensus between multiple sets of labels
 
-    :param label_matrix: the matrix of labels [[partition 1 labels], [partition 2 labels], etc.]
+    Parameters
+    ----------
+    label_matrix: the matrix of labels [[partition 1 labels], [partition 2 labels], etc.]
         Currently cannot have negative values for the labels (often used for noise)
-    :return: The final list of labels
+
+    Returns
+    -------
+    the list of labels according to the consensus
     """
+
     par_r = label_matrix[0]
-    # TODO update to check all to get max
-    k = max(par_r) + 1  # num of clusters
+
+    k = -1  # max number of clusters
+    for labels in label_matrix:
+        if -1 in labels:
+            raise ValueError("Negative cluster label (often used for noise)- cluster labels must be >= 0")
+        if len(labels) != len(par_r):
+            raise ValueError("Each set of labels in the label_matrix must be the same length")
+
+        k = max(k, max(labels) + 1)
 
     adjusted_label_matrix = [par_r]
     remaining_par = label_matrix[1:]
