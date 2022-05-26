@@ -9,7 +9,6 @@ class NMFConsensusTest(unittest.TestCase):
                        [1, 0, 0, 1, 1, 0],
                        [0, 1, 1, 0, 0, 1]]
 
-
         with self.assertRaises(ValueError) as e:
             nmf_consensus(test_labels)
         self.assertEqual(e.exception.args[0],
