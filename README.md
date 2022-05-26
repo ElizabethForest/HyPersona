@@ -1,5 +1,7 @@
 # HyPersona
 
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/PyCQA/pylint)
+
 A semi-automated framework for persona development and the hyperparameter tuning of clustering algorithms.
 This code accompanies the publication: [Selecting a clustering algorithm: A semi-automated hyperparameter tuning framework for effective persona development](https://doi.org/10.1016/j.array.2022.100186)
 
