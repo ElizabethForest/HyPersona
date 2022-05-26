@@ -45,5 +45,7 @@ def average_feature_significance(data, labels, return_significance_map=False):
     vs_sig_counts = [len(y) for y in vs_sig.values()]
     afs = (sum(pop_sig_counts) + sum(vs_sig_counts)) / (len(pop_sig_counts) + len(vs_sig_counts))
 
-    return afs, {"pop_significance": pop_sig, "vs_significance": vs_sig} \
-        if return_significance_map else afs
+    if return_significance_map:
+        return afs, {"pop_significance": pop_sig, "vs_significance": vs_sig}
+
+    return afs
