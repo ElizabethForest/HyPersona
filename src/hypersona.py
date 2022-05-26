@@ -169,12 +169,12 @@ def _create_graph(key_diff_in_std, run_id, graph_output_location):
         # Make the plot look nice
         ax.set_ylim(top=max_diff, bottom=min_diff)
         ax.grid(axis='y', zorder=0)
-        ax.set_ylabel('Standard Deviations from\nPopluation Mean')
+        ax.set_ylabel('Standard Deviations from\nPopulation Mean')
         ax.set_xlabel('Feature')
         ax.set_title(f"Cluster {i}")
 
     plt.suptitle(f"Clusters for {run_id}")
-    fig.tight_layout()  # stops graphs overlapping
+    fig.tight_layout()  # stop graphs overlapping
     fig.show()
     fig.savefig(f"{graph_output_location}{run_id}.svg", format='svg')
 
@@ -263,8 +263,9 @@ def _reset_files(output_location):
 
 # TODO: finish doc-string and add docstrings to other places
 # expects data as a pandas data frame
-def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=None, thresholds=None, acronyms=None,
-                   output_location="", graph_output_location=None, always_in_personas=None, reset_files=True):
+def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=None, thresholds=None,
+                   acronyms=None, output_location="", graph_output_location=None,
+                   always_in_personas=None, reset_files=True):
     """
     Runs the HyPersona framework. See [docs] or [paper] for more details. TODO
 

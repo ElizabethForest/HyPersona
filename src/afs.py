@@ -5,7 +5,7 @@ from scipy.stats import ttest_ind, ttest_1samp
 
 # TODO: docstring
 def average_feature_significance(data, labels, return_significance_map=False):
-    unique_labels, counts = np.unique(labels, return_counts=True)
+    unique_labels = np.unique(labels)
 
     data = data.copy()
     pop_means = data.mean()
@@ -21,7 +21,7 @@ def average_feature_significance(data, labels, return_significance_map=False):
 
         for column in columns:
             pop_mean = pop_means[column]
-            tstat, pval = ttest_1samp(cluster[[column]], pop_mean)
+            _, pval = ttest_1samp(cluster[[column]], pop_mean)
             if pval[0] < 0.05:
                 pop_sig[label].append(column)
 
@@ -31,19 +31,17 @@ def average_feature_significance(data, labels, return_significance_map=False):
     for label_1, label_2 in label_combinations:
         cluster_1 = data[data.labels == label_1]
         cluster_2 = data[data.labels == label_2]
-        vs = f"{label_1} vs {label_2}"
-        vs_sig[vs] = []
+        vs_str = f"{label_1} vs {label_2}"
+        vs_sig[vs_str] = []
 
         for column in columns:
-            tstat, pval = ttest_ind(cluster_1[[column]], cluster_2[[column]])
+            _, pval = ttest_ind(cluster_1[[column]], cluster_2[[column]])
             if pval[0] < 0.05:
-                vs_sig[vs].append(column)
+                vs_sig[vs_str].append(column)
 
     pop_sig_counts = [len(x) for x in pop_sig.values()]
     vs_sig_counts = [len(y) for y in vs_sig.values()]
     afs = (sum(pop_sig_counts) + sum(vs_sig_counts)) / (len(pop_sig_counts) + len(vs_sig_counts))
 
-    if return_significance_map:
-        return afs, {"pop_significance": pop_sig, "vs_significance": vs_sig}
-    else:
-        return afs
+    return afs, {"pop_significance": pop_sig, "vs_significance": vs_sig} \
+        if return_significance_map else afs
