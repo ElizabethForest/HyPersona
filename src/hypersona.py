@@ -264,7 +264,6 @@ def _reset_files(output_location):
 
 
 # TODO: finish doc-string and add docstrings to other places
-# expects data as a pandas data frame
 def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=None, thresholds=None,
                    acronyms=None, output_location="", graph_output_location=None,
                    always_in_personas=None, reset_files=True):

@@ -11,7 +11,6 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment
 
 
-# todo deal with noise/neg values in classes need to deal with them when relabelling and when determining final
 def simple_voting_consensus(label_matrix):
     """
     Uses Simple Voting to the consensus between multiple sets of labels
@@ -31,7 +30,8 @@ def simple_voting_consensus(label_matrix):
     k = -1  # max number of clusters
     for labels in label_matrix:
         if -1 in labels:
-            raise ValueError("Negative cluster label (often used for noise)- cluster labels must be >= 0")
+            raise ValueError("Negative cluster label (often used for noise) - "
+                             "cluster labels must be >= 0")
         if len(labels) != len(par_r):
             raise ValueError("Each set of labels in the label_matrix must be the same length")
 
@@ -50,7 +50,8 @@ def simple_voting_consensus(label_matrix):
                         count += 1
                 co_occ[i][j] = count
 
-        # invert values since the Hungarian algorithm is implemented as a min fn, when we want a max fn
+        # invert values since the Hungarian algorithm is implemented as a min fn,
+        # when we want a max fn
         cost = (np.ones((k, k)) * co_occ.max()) - co_occ
         relabelling = linear_sum_assignment(cost)
         new_par_g = [relabelling[1][x] for x in par_g]
