@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import unittest
 from src.ensemble.simple_consensus import simple_voting_consensus
 

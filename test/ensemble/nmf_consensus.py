@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import unittest
 from src.ensemble.nmf_consensus import nmf_consensus
 

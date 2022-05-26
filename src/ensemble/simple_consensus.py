@@ -60,4 +60,3 @@ def simple_voting_consensus(label_matrix):
     transposed_labels = np.transpose(adjusted_label_matrix)
     labels = [np.bincount(x).argmax() for x in transposed_labels]
     return labels
-

@@ -1,3 +1,6 @@
+# pylint: disable=C
+# ignoring convention linting since code from someone else.
+
 # From: https://github.com/tsano430/ClusterEnsembles/blob/main/ClusterEnsembles/ClusterEnsembles.py
 # ClusterEnsembles.py
 #   Author: Takehiro Sano
