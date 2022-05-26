@@ -70,8 +70,8 @@ def _run_ensemble_algorithm(algorithms, params, data):
     elif callable(consensus):
         consensus_method = consensus
     else:
-        raise ValueError(f"Consensus {consensus} is not a valid option."
-                         f" Valid options are 'basic', 'nmf', or you may pass in a custom function.")
+        raise ValueError(f"Consensus {consensus} is not a valid option. Valid options are 'basic',"
+                         f" 'nmf', or you may pass in a custom function.")
 
     label_matrix = []
     counter = 0
@@ -85,7 +85,8 @@ def _run_ensemble_algorithm(algorithms, params, data):
         elif type_ == "ensemble":
             raise ValueError("Cannot nest ensembles")
         else:
-            raise ValueError("Unknown algorithm type within ensemble: {type_} - expecting 'class' or 'function'")
+            raise ValueError("Unknown algorithm type within ensemble: {type_} "
+                             "- expecting 'class' or 'function'")
 
         alg = details['algorithm']
         inner_params = details.get("params", None)
@@ -119,23 +120,28 @@ def _calculate_metrics_and_thresholds(data, labels, thresholds):
 
         min_cluster_size = thresholds["min_cluster_size"]
         if any(size < min_cluster_size for size in counts):
-            errors.append(f"Created clusters that are too small (below {min_cluster_size}): {counts}")
+            errors.append(f"Created clusters that are too small "
+                          f"(below {min_cluster_size}): {counts}")
 
         metrics['SC'] = silhouette_score(data, labels, metric="euclidean")
         if ("SC" in threshold_keys) and metrics['SC'] < thresholds['SC']:
-            errors.append(f"SC value - {metrics['SC']} - does not meet internal threshold of {thresholds['SC']}")
+            errors.append(f"SC value - {metrics['SC']} - does not meet internal threshold of "
+                          f"{thresholds['SC']}")
 
         metrics['CHI'] = calinski_harabasz_score(data, labels)
         if ("CHI" in threshold_keys) and metrics['CHI'] < thresholds['CHI']:
-            errors.append(f"CHI value - {metrics['CHI']} - does not meet internal threshold of {thresholds['CHI']}")
+            errors.append(f"CHI value - {metrics['CHI']} - does not meet internal threshold of "
+                          f"{thresholds['CHI']}")
 
         metrics['DBI'] = davies_bouldin_score(data, labels)
         if ("DBI" in threshold_keys) and metrics['DBI'] > thresholds['DBI']:
-            errors.append(f"DBI value - {metrics['DBI']} - does not meet internal threshold of {thresholds['DBI']}")
+            errors.append(f"DBI value - {metrics['DBI']} - does not meet internal threshold of "
+                          f"{thresholds['DBI']}")
 
         metrics['AFS'], significance_map = average_feature_significance(data, labels, True)
         if ("AFS" in threshold_keys) and metrics['AFS'] < thresholds['AFS']:
-            errors.append(f"AFS value - {metrics['AFS']} - does not meet internal threshold of {thresholds['AFS']}")
+            errors.append(f"AFS value - {metrics['AFS']} - does not meet internal threshold of "
+                          f"{thresholds['AFS']}")
 
         return errors, metrics, significance_map
 
@@ -178,7 +184,8 @@ def _output_dropped(run_id, params, threshold_errors, output_location):
     _append_string(output_location, DROPPED_LOCATION, f"""{run_id},"{params}",{error_string}\n""")
 
 
-def _create_personas(always_in_personas, aggregate_features, significance_map, centroids, diffs_in_std, pop_means):
+def _create_personas(always_in_personas, aggregate_features, significance_map, centroids,
+                     diffs_in_std, pop_means):
     personas = "Personas\n\nPlease note: significance is not calculated for aggregate features\n"
     for index, values in centroids.iterrows():
         personas += f"\nPersona {index}\n"
@@ -200,7 +207,8 @@ def _create_personas(always_in_personas, aggregate_features, significance_map, c
                                 f"pop avg: {round(pop_means[acr], 2):>4.2}, " \
                                 f"StD diff: {round(diffs_in_std[acr][index], 2):+.2}\n"
 
-        personas += "Features significantly different from the population: (not already mentioned)\n"
+        personas += "Features significantly different from the population: " \
+                    "(not already mentioned)\n"
         for feature in vs_pop_sig:
             if not (feature in always_in_personas or feature in aggregate_features):
                 personas += f"{feature:>20}: " \
@@ -221,9 +229,11 @@ def _build_metric_string(metrics):
 
 
 def _build_significance_string(data, significance_map):
-    output_str = "\nCluster Name, Cluster Size, vs Population Significance Count, Significant Features\n"
-    output_str += "".join([f"""Cluster {label},{data[data.labels == label].shape[0]},{len(values)},"{values}"\n"""
-                           for label, values in significance_map['pop_significance'].items()])
+    output_str = "\nCluster Name, Cluster Size, vs Population Significance Count, " \
+                 "Significant Features\n"
+    output_str += "".join([
+        f"""Cluster {label},{data[data.labels == label].shape[0]},{len(values)},"{values}"\n"""
+        for label, values in significance_map['pop_significance'].items()])
 
     output_str += "\nSignificant features between clusters\n"
     output_str += "".join([f"""Cluster {label},{len(values)},"{values}"\n"""
@@ -247,7 +257,8 @@ def _append_string(output_location, suffix, string):
 def _reset_files(output_location):
     _write_string(output_location, ERRORS_LOCATION, 'Run ID, Parameters, Error\n')
     _write_string(output_location, DROPPED_LOCATION, 'Run ID, Parameters, Dropped Reason\n')
-    _write_string(output_location, METRICS_LOCATION, 'Run ID, Parameters, SC, CHI, DBI, AFS, Dropped\n')
+    _write_string(output_location, METRICS_LOCATION,
+                  'Run ID, Parameters, SC, CHI, DBI, AFS, Dropped\n')
 
 
 # TODO: finish doc-string and add docstrings to other places
@@ -263,11 +274,13 @@ def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=No
         The data to be clustered.
 
     algorithm_map : dict
-        The algorithms and parameters to be compared. See [xxx] for more details. TODO: write up explanation
+        The algorithms and parameters to be compared. See [xxx] for more details.
+        TODO: write up explanation
 
     key_features : list, default=None
         The list of "key features" to be included in the graphs.
-        When set to None, all features, including any aggregate features, are considered "key features".
+        When set to None, all features, including any aggregate features, are considered
+        "key features".
 
     aggregate_features : dict, default=None
 
@@ -279,13 +292,14 @@ def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=No
         The location for all output (.csv files, personas, and graphs) to be saved to
 
     graph_output_location : String, default=""
-        The location for the graphs to be saved to. Will override the output_location just for the graph output.
+        The location for the graphs to be saved to. Will override the output_location just for the
+        graph output.
 
     always_in_personas : list, default=None
 
     reset_files : bool, default=True
-        Whether the files that are appended to (metrics.csv, dropped.csv, and error.csv) should be reset, or whether
-        additional information should just be appended to the existing files.
+        Whether the files that are appended to (metrics.csv, dropped.csv, and error.csv) should be
+        reset, or whether additional information should just be appended to the existing files.
 
     Returns
     ----------
@@ -339,7 +353,8 @@ def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=No
 
             try:
                 labels = run_method(alg, param_map, data)
-                threshold_errors, metrics, significances = _calculate_metrics_and_thresholds(data, labels, thresholds)
+                threshold_errors, metrics, significances \
+                    = _calculate_metrics_and_thresholds(data, labels, thresholds)
                 _output_metrics(run_id, param_map, output_location, metrics, threshold_errors)
 
                 if threshold_errors:
@@ -373,17 +388,20 @@ def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=No
                     centroids = data_clustered.groupby('labels').mean()
                     pop_means = data_clustered.mean()
 
-                    # get the distance each feature of each centroid is from the population mean in standard deviations
+                    # get the distance each feature of each centroid is from the population mean
+                    # in standard deviations
                     for column in columns:
                         col_mean = pop_means[column]
                         col_std = data_clustered[column].std()
                         cluster_means = centroids[column]
 
-                        diffs_in_std[column] = [(col_mean - clus_mean) / col_std for clus_mean in cluster_means]
+                        diffs_in_std[column] = [(col_mean - clus_mean) / col_std
+                                                for clus_mean in cluster_means]
 
-                        cluster_values = ','.join([f"{x},{y}" for x, y in zip(cluster_means, diffs_in_std[column])])
-                        output_str += f"{column}{' (aggregate)' if column in aggregate_features else ''}," \
-                                      f"{col_mean},{col_std},{cluster_values}\n"
+                        zipped = zip(cluster_means, diffs_in_std[column])
+                        cluster_values = ','.join([f"{x},{y}" for x, y in zipped])
+                        aggregate = ' (aggregate)' if column in aggregate_features else ''
+                        output_str += f"{column}{aggregate},{col_mean},{col_std},{cluster_values}\n"
 
                     _write_string(output_location, '.csv', output_str, run_id)
 
@@ -393,12 +411,13 @@ def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=No
                         graph_data.rename(columns=acronyms, inplace=True)
                     _create_graph(graph_data, run_id, graph_output_location)
 
-                    personas = _create_personas(always_in_personas, aggregate_features, significances, centroids,
-                                                diffs_in_std, pop_means)
+                    personas = _create_personas(always_in_personas, aggregate_features,
+                                                significances, centroids, diffs_in_std, pop_means)
                     _write_string(output_location, '_personas.txt', personas, run_id)
 
             # catch any/all exceptions to allow the framework to keep running
             except Exception as e:
                 error_type = e.__class__.__name__
                 print(f"An error occurred running {run_id}: \n{error_type}: {e}")
-                _append_string(output_location, ERRORS_LOCATION, f"""{run_id},"{param_map}",{error_type}:{e}\n""")
+                _append_string(output_location, ERRORS_LOCATION,
+                               f"""{run_id},"{param_map}",{error_type}:{e}\n""")

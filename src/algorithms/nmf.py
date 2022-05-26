@@ -20,8 +20,8 @@ class NMFCluster(NMF, ClusterMixin):
 
     def fit_predict(self, X, **params):
         """
-        Learns a NMF model for data X and returns a series of labels based on the normalized components
-
+        Learns a NMF model for the data and returns a series of labels based on the normalized
+        components.
         Labels are assigned based on which component the sample has the strongest affinity for
 
         Parameters

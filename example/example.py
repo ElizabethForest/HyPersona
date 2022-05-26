@@ -34,5 +34,6 @@ algorithm_map = {
                                                "linkage": ["ward", "complete"]}}]}
 }
 
-run_algorithms(X, algorithm_map, aggregate_features={'a': ['Column_A', 'Column_B'], 'b': ['Column_A']},
-               acronyms={'Column_A': 'wow!'}, graph_output_location="graphs/", always_in_personas=['Column_A', 'b'])
+run_algorithms(X, algorithm_map, acronyms={'Column_A': 'wow!'},
+               aggregate_features={'a': ['Column_A', 'Column_B'], 'b': ['Column_A']},
+               graph_output_location="graphs/", always_in_personas=['Column_A', 'b'])

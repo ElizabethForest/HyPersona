@@ -12,7 +12,8 @@ class TestSimpleVoting(unittest.TestCase):
         with self.assertRaises(ValueError) as e:
             simple_voting_consensus(test_labels)
         self.assertEqual(e.exception.args[0],
-                         "Negative cluster label (often used for noise)- cluster labels must be >= 0")
+                         "Negative cluster label (often used for noise)- "
+                         "cluster labels must be >= 0")
 
     def test_when_mismatch_label_count(self):
         test_labels = [[0, 1, 1, 0, 0, 1],
@@ -21,7 +22,8 @@ class TestSimpleVoting(unittest.TestCase):
 
         with self.assertRaises(ValueError) as e:
             simple_voting_consensus(test_labels)
-        self.assertEqual(e.exception.args[0], "Each set of labels in the label_matrix must be the same length")
+        self.assertEqual(e.exception.args[0],
+                         "Each set of labels in the label_matrix must be the same length")
 
     def test_when_labels_agree(self):
         test_labels = [[0, 1, 1, 0, 0, 1],

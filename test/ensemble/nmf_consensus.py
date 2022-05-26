@@ -12,7 +12,8 @@ class NMFConsensusTest(unittest.TestCase):
         with self.assertRaises(ValueError) as e:
             nmf_consensus(test_labels)
         self.assertEqual(e.exception.args[0],
-                         "Negative cluster label (often used for noise)- cluster labels must be >= 0")
+                         "Negative cluster label (often used for noise)- "
+                         "cluster labels must be >= 0")
 
     def test_when_mismatch_label_count(self):
         test_labels = [[0, 1, 1, 0, 0, 1],
@@ -21,7 +22,8 @@ class NMFConsensusTest(unittest.TestCase):
 
         with self.assertRaises(ValueError) as e:
             nmf_consensus(test_labels)
-        self.assertEqual(e.exception.args[0], "Each set of labels in the label_matrix must be the same length")
+        self.assertEqual(e.exception.args[0],
+                         "Each set of labels in the label_matrix must be the same length")
 
     # NMF consensus does not consistently give the same labels.
     # If you update NMF consensus please ensure that all the tests *would* pass
