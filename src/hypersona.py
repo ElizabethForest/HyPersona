@@ -307,7 +307,7 @@ def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=No
     output_location : String, default=""
         The location for all output (.csv files, personas, and graphs) to be saved to.
     graph_output_location : String, default=""
-        The location for the graphs to be saved to. Will override the output_location just for the bb
+        The location for the graphs to be saved to. Will override the output_location just for the
         graph output.
     always_in_personas : list, default=None
         TODO

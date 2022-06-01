@@ -1,4 +1,4 @@
-# pylint: disable=too-many-locals
+# pylint: disable=too-many-locals,anomalous-backslash-in-string
 """
 Average Feature Significance
 

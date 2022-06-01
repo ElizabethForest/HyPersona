@@ -59,14 +59,7 @@ def simple_voting_consensus(label_matrix):
     remaining_par = label_matrix[1:]
 
     for par_g in remaining_par:
-        co_occ = np.zeros((k, k))  # co-occurrence matrix
-        for i in range(k):
-            for j in range(k):
-                count = 0
-                for x in range(len(par_r)):
-                    if par_g[x] == i and par_r[x] == j:
-                        count += 1
-                co_occ[i][j] = count
+        co_occ = calculate_co_occurrence_matrix(k, par_g, par_r)
 
         # invert values since the Hungarian algorithm is implemented as a min fn,
         # when we want a max fn
@@ -79,3 +72,29 @@ def simple_voting_consensus(label_matrix):
     transposed_labels = np.transpose(adjusted_label_matrix)
     labels = [np.bincount(x).argmax() for x in transposed_labels]
     return labels
+
+
+def calculate_co_occurrence_matrix(k, par_g, par_r):
+    """
+    Calculate the co-occurrence matrix of two sets of labels
+
+    Parameters
+    ----------
+    k : int
+        The number of clusters/classes/unique labels
+    par_g, par_r : array_like of ints
+        the lists of labels to be compared
+
+    Returns
+    -------
+    the co-occurrence matrix of the two sets of labels
+    """
+    co_occ = np.zeros((k, k))  # co-occurrence matrix
+    for i in range(k):
+        for j in range(k):
+            count = 0
+            for x, value in enumerate(par_r):
+                if par_g[x] == i and value == j:
+                    count += 1
+            co_occ[i][j] = count
+    return co_occ
