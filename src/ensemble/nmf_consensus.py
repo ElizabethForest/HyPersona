@@ -85,7 +85,8 @@ def nmf_consensus(labels: np.ndarray):
     nclass = -1
     for label in labels:
         if -1 in label:
-            raise ValueError("Negative cluster label (often used for noise)- cluster labels must be >= 0")
+            raise ValueError("Negative cluster label (often used for noise)"
+                             " - cluster labels must be >= 0")
         if len(label) != len(labels[0]):
             raise ValueError("Each set of labels in the label_matrix must be the same length")
 
