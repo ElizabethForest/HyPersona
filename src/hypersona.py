@@ -1,4 +1,20 @@
 # pylint: disable=too-many-branches,too-many-statements
+"""
+The HyPersona Framework
+
+run_algorithms : the main function
+    Call run_algorithms with the required arguments to run the HyPersona framework.
+
+
+Implemented as described in:
+
+E. Ditton, A. Swinbourne, and T. Myers, “Selecting a clustering algorithm: A semi-automated
+hyperparameter tuning framework for effective persona development,” Array, vol. 14, p. 100186, Jul.
+2022, doi: 10.1016/j.array.2022.100186.
+
+
+See docs, example.py, or the run_algorithms() docstring for more information.
+"""
 
 import itertools
 import matplotlib.pyplot as plt
@@ -16,7 +32,7 @@ METRICS_LOCATION = 'all_metrics.csv'
 COLOURS = ['lightblue', 'cornflowerblue', 'steelblue', 'royalblue', 'mediumblue', 'navy']
 
 
-# TODO: add tests and comments
+# TODO: add tests, comments, and documentation
 
 
 def _explode_params(params):
@@ -268,44 +284,48 @@ def run_algorithms(data, algorithm_map, key_features=None, aggregate_features=No
                    acronyms=None, output_location="", graph_output_location=None,
                    always_in_personas=None, reset_files=True):
     """
-    Runs the HyPersona framework. See [docs] or [paper] for more details. TODO
+    Runs the HyPersona framework. See the example (example.py), the docs^[1] or the related
+    paper^[2] for more details. TODO: docs
 
     Parameters
     ----------
     data : Pandas DataFrame
         The data to be clustered.
-
     algorithm_map : dict
-        The algorithms and parameters to be compared. See [xxx] for more details.
-        TODO: write up explanation
-
+        The algorithms and parameters to be compared. See the example (example.py), the docs^[1]
+        or the related paper^[2] for more details.
     key_features : list, default=None
         The list of "key features" to be included in the graphs.
         When set to None, all features, including any aggregate features, are considered
         "key features".
-
     aggregate_features : dict, default=None
-
+        TODO
     thresholds : dict, default=None
-
+        TODO
     acronyms : dict, default=None
-
+        TODO
     output_location : String, default=""
-        The location for all output (.csv files, personas, and graphs) to be saved to
-
+        The location for all output (.csv files, personas, and graphs) to be saved to.
     graph_output_location : String, default=""
-        The location for the graphs to be saved to. Will override the output_location just for the
+        The location for the graphs to be saved to. Will override the output_location just for the bb
         graph output.
-
     always_in_personas : list, default=None
-
+        TODO
     reset_files : bool, default=True
         Whether the files that are appended to (metrics.csv, dropped.csv, and error.csv) should be
         reset, or whether additional information should just be appended to the existing files.
 
     Returns
     ----------
-    Nothing. See [xxx] for details on output. TODO
+    Nothing. See the docs^[1] or the related paper^[2] for details on output.
+
+    Notes
+    -----
+
+    [1]
+    [2] E. Ditton, A. Swinbourne, and T. Myers, “Selecting a clustering algorithm: A semi-automated
+        hyperparameter tuning framework for effective persona development,” Array, vol. 14, p.
+        100186, Jul. 2022, doi: 10.1016/j.array.2022.100186.
     """
     # default graph output location to output location
     if not graph_output_location:

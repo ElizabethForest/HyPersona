@@ -1,11 +1,27 @@
-# TODO: proper references in the proper spot
-# References:
-# https://www.sciencedirect.com/science/article/pii/S1574013717300692
-# https://ieeexplore.ieee.org/abstract/document/1410288
+"""
+Simple voting consensus function
 
-# minor reference
-# https://github.com/tdedecko/hungarian-algorithm/blob/master/hungarian.py
-# https://github.com/NaegleLab/OpenEnsembles
+Multiple refences were used to develop the consensus function code
+
+Notes
+-----
+
+Two papers were referenced during the development of the simple voting consensus function:
+
+1. Boongoen, T. and Iam-On, N., “Cluster ensembles: A survey of approaches with recent extensions
+   and applications,” Comput. Sci. Rev., vol. 28, pp. 1–25, May 2018,
+   doi: 10.1016/j.cosrev.2018.01.003.
+2. Topchy, A. P., Law, M. H. C., Jain, A. K. and Fred, A. L., “Analysis of consensus partition in
+   cluster ensemble,” in Fourth IEEE International Conference on Data Mining (ICDM’04), Nov. 2004,
+   pp. 225–232. doi: 10.1109/ICDM.2004.10100.
+
+Two code bases were also referenced during implementation. They are:
+
+1. hungarian-algorithm by tdedecko
+   https://github.com/tdedecko/hungarian-algorithm/blob/master/hungarian.py
+2. OpenEnsembles by NaegleLab https://github.com/NaegleLab/OpenEnsembles
+
+"""
 
 import numpy as np
 from scipy.optimize import linear_sum_assignment
@@ -17,12 +33,14 @@ def simple_voting_consensus(label_matrix):
 
     Parameters
     ----------
-    label_matrix: the matrix of labels [[partition 1 labels], [partition 2 labels], etc.]
-        Currently cannot have negative values for the labels (often used for noise)
+    label_matrix : matrix of ints
+        The matrix of labels [[partition 1 labels], [partition 2 labels], etc.]
+        Cannot have negative values for the labels (often used for noise)
 
     Returns
     -------
-    the list of labels according to the consensus
+    array :
+        the list of labels according to the consensus
     """
 
     par_r = label_matrix[0]
