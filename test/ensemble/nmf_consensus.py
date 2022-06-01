@@ -13,7 +13,7 @@ class NMFConsensusTest(unittest.TestCase):
         with self.assertRaises(ValueError) as e:
             nmf_consensus(test_labels)
         self.assertEqual(e.exception.args[0],
-                         "Negative cluster label (often used for noise)- "
+                         "Negative cluster label (often used for noise) - "
                          "cluster labels must be >= 0")
 
     def test_when_mismatch_label_count(self):
